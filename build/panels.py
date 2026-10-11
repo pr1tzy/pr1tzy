@@ -31,6 +31,7 @@ from header import DARK, LIGHT, OUT, Face, FONTS
 W, M = 880, 48
 H_CARD = 112
 H_STACK = 150
+H_ACT = 168
 
 GQL = """
 { user(login:"pr1tzy"){ repositories(first:100,ownerAffiliations:OWNER,
@@ -55,6 +56,96 @@ CARDS = [
 ]
 
 EXCLUDE = {"Jupyter Notebook"}
+
+# Daily commit counts for the trailing 30 days. Aggregate only - repository
+# names are deliberately not fetched or drawn, because the bulk of this
+# activity is in private work repos and naming them here would publish them.
+ACT_GQL = """
+query($from:DateTime!,$to:DateTime!){
+  user(login:"pr1tzy"){ contributionsCollection(from:$from,to:$to){
+    totalCommitContributions
+    contributionCalendar{ weeks{ contributionDays{ date contributionCount } } }
+  } } }
+"""
+
+
+def activity() -> dict:
+    cache = Path(__file__).parent / "activity.json"
+    import datetime as _dt
+    today = _dt.date.today()
+    start = today - _dt.timedelta(days=29)
+    try:
+        raw = subprocess.run(
+            ["gh", "api", "graphql",
+             "-F", f"from={start.isoformat()}T00:00:00Z",
+             "-F", f"to={today.isoformat()}T23:59:59Z",
+             "-f", f"query={ACT_GQL}"],
+            capture_output=True, text=True, timeout=60, check=True,
+            env={**os.environ, "MSYS_NO_PATHCONV": "1"}).stdout
+        cc = json.loads(raw)["data"]["user"]["contributionsCollection"]
+        days = [d for w in cc["contributionCalendar"]["weeks"]
+                for d in w["contributionDays"]
+                if d["date"] >= start.isoformat()]
+        out = {"commits": cc["totalCommitContributions"],
+               "from": start.isoformat(), "to": today.isoformat(),
+               "days": [[d["date"], d["contributionCount"]] for d in days]}
+        cache.write_text(json.dumps(out), encoding="utf-8")
+        return out
+    except Exception as exc:
+        print(f"  (activity fetch failed: {exc}; using cache)")
+        return json.loads(cache.read_text())
+
+
+def act_panel(t: dict) -> str:
+    disp = Face(FONTS / "Grotesk-Gras.woff2")
+    mono = Face(FONTS / "Sligoil-Micro.woff2")
+    TR = 0.16
+    a = activity()
+    days = a["days"]
+    peak = max((n for _, n in days), default=1) or 1
+    body = []
+
+    hdr, _ = mono.text("ACTIVITY / LAST 30 DAYS / ALL REPOSITORIES", 12, M, 46, TR)
+    body.append(f'<g class="rise" fill="{t["acc"]}">{hdr}</g>')
+
+    big, bw = disp.text(str(a["commits"]), 38, M - 2, 88)
+    body.append(f'<g class="rise" style="animation-delay:.06s" fill="{t["fg"]}">{big}</g>')
+    unit, _ = mono.text("COMMITS", 12, M + bw + 12, 88, TR)
+    body.append(f'<g class="rise" style="animation-delay:.1s" fill="{t["mute"]}">{unit}</g>')
+
+    x0, x1, base, top = M, W - M, 136, 62
+    slot = (x1 - x0) / max(len(days), 1)
+    bw_bar = max(slot - 3, 2)
+    for i, (date, n) in enumerate(days):
+        h = 0 if n == 0 else max(2.0, (base - top) * n / peak)
+        x = x0 + i * slot
+        col = t["acc"] if n >= peak * 0.6 else (t["cyan"] if n > 0 else t["mute"])
+        op = .9 if n > 0 else .18
+        body.append(
+            f'<g class="bar" style="animation-delay:{.12 + i*.012}s;'
+            f'transform-origin:center {base}px;transform-box:fill-box">'
+            f'<rect x="{x:.1f}" y="{base-h:.1f}" width="{bw_bar:.1f}" '
+            f'height="{max(h,2):.1f}" fill="{col}" opacity="{op}"/></g>')
+
+    body.append(f'<line x1="{M}" y1="{base+1}" x2="{W-M}" y2="{base+1}" '
+                f'stroke="{t["fg"]}" stroke-opacity="{t["rule_op"]}"/>')
+    lo, _ = mono.text(a["from"], 11, M, 156, TR)
+    hiw = mono.width(a["to"], 11, TR)
+    hi, _ = mono.text(a["to"], 11, W - M - hiw, 156, TR)
+    pk, pkw = mono.text(f"PEAK {peak}/DAY", 11, 0, 0, TR)
+    pkx = M + (W - 2*M - pkw) / 2
+    pk, _ = mono.text(f"PEAK {peak}/DAY", 11, pkx, 156, TR)
+    for g in (lo, hi):
+        body.append(f'<g class="rise" style="animation-delay:.5s" fill="{t["mute"]}">{g}</g>')
+    body.append(f'<g class="rise" style="animation-delay:.5s" fill="{t["dim"]}">{pk}</g>')
+
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H_ACT}" width="{W}" height="{H_ACT}" role="img" aria-label="Activity: {a['commits']} commits in the last 30 days, peak {peak} in a day.">
+<style>{CSS}</style>
+<rect width="{W}" height="{H_ACT}" fill="{t['bg']}"/>
+{grid(W, H_ACT, t)}
+{''.join(body)}
+</svg>'''
+
 
 
 def langs() -> list[tuple[str, int]]:
@@ -201,9 +292,10 @@ def main() -> None:
             p = OUT / f"card-{c['slug']}-{tone}.svg"
             p.write_text(card(c, theme), encoding="utf-8")
             print(f"{p.name}  {p.stat().st_size/1024:.0f} KB")
-        p = OUT / f"stack-{tone}.svg"
-        p.write_text(stack(theme), encoding="utf-8")
-        print(f"{p.name}  {p.stat().st_size/1024:.0f} KB")
+        for stem, fn in (("stack", stack), ("activity", act_panel)):
+            p = OUT / f"{stem}-{tone}.svg"
+            p.write_text(fn(theme), encoding="utf-8")
+            print(f"{p.name}  {p.stat().st_size/1024:.0f} KB")
 
 
 if __name__ == "__main__":

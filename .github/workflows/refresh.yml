@@ -5,16 +5,14 @@ name: refresh panels
 # too (it is deterministic - same lap, same output) so a font or layout change
 # only needs a commit to build/, not regenerated assets.
 
+# Deliberately NOT triggered on push. The job commits regenerated assets, so
+# running it on push means every push you make is immediately followed by a bot
+# commit, and your next push is rejected as non-fast-forward. You build locally
+# anyway; this exists to keep the live language data fresh on its own.
 on:
   schedule:
     - cron: "17 4 * * 1"      # weekly, Monday
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "build/**"
-      - "vendor/**"
-      - ".github/workflows/refresh.yml"
 
 permissions:
   contents: write

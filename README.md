@@ -93,6 +93,12 @@ volume alone does not.
 ---
 
 <picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/activity-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/activity-dark.svg" />
+  <img alt="Activity over the last 30 days across all repositories." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/activity-dark.svg" width="100%" />
+</picture>
+
+<picture>
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-light.svg" />
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-dark.svg" />
   <img alt="Language mix across public repositories, source code only, notebooks excluded." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-dark.svg" width="100%" />
