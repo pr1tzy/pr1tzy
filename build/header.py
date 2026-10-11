@@ -23,9 +23,10 @@ from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.ttLib import TTFont
 
 ROOT = Path(__file__).resolve().parent.parent
-GHOSTLINE = Path("A:/race_analysis")
-SAMPLES = GHOSTLINE / "samples"
-FONTS = GHOSTLINE / "frontend" / "fonts"
+# Vendored so the repo builds anywhere, including CI. Fonts are Velvetyne
+# (OFL, licences alongside them); the lap is Ghostline's own sample telemetry.
+SAMPLES = ROOT / "vendor" / "samples"
+FONTS = ROOT / "vendor" / "fonts"
 OUT = ROOT / "assets"
 
 W, H = 1200, 420

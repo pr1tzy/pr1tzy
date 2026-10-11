@@ -20,13 +20,22 @@ shipped      ghostline.prithvisingh.fyi
 
 ---
 
-## Selected work
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-dark.svg" />
+  <img alt="Selected work: Ghostline, Self-healing LLM QA, ParkiSense, with engineering metrics." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-dark.svg" width="100%" />
+</picture>
 
-| Project | What it does | Stack |
-|---|---|---|
-| **[Ghostline](https://github.com/pr1tzy/ghostline)** · [live](https://ghostline.prithvisingh.fyi) | Records Assetto Corsa laps at 60 Hz, logs the fastest drivers on the server as ghosts, and tells you corner by corner where the time went. Live dash for a second monitor. | Python, SQLite, Lua, vanilla JS |
-| **[Self-healing LLM QA](https://github.com/pr1tzy/mlopsproject)** | QA service that evaluates every candidate model against a benchmark and live traffic, then rolls itself back when a deploy regresses. | DVC, MLflow, Jenkins, Transformers |
-| **[ParkiSense](https://github.com/pr1tzy/ParkiSense)** | Early Parkinson's screening from keystroke dynamics and drawing tremor. Wavelet and time-frequency features into SVM and Random Forest. | scikit-learn, SciPy, Gradio |
+**[Ghostline](https://github.com/pr1tzy/ghostline)** · [live](https://ghostline.prithvisingh.fyi) — records Assetto Corsa laps at 60 Hz,
+logs the fastest drivers on the server as ghosts, and tells you corner by corner
+where the time went. Python, SQLite, Lua, vanilla JS.
+
+**[Self-healing LLM QA](https://github.com/pr1tzy/self-healing-llm-qa)** — evaluates every candidate model against a
+benchmark and live traffic, then rolls itself back when a deploy regresses.
+DVC, MLflow, Jenkins, Transformers.
+
+**[ParkiSense](https://github.com/pr1tzy/ParkiSense)** — early Parkinson's screening from keystroke dynamics and
+drawing tremor. Wavelet and time-frequency features into SVM and Random Forest.
 
 ---
 
@@ -72,15 +81,10 @@ volume alone does not.
 
 ---
 
-<a href="https://github.com/pr1tzy">
-<img height="150" alt="stats" src="https://github-readme-stats.vercel.app/api?username=pr1tzy&show_icons=true&hide_border=true&hide_title=true&include_all_commits=true&bg_color=0b0a0f&text_color=8a8597&icon_color=7c5cff&title_color=4ad9d9&ring_color=7c5cff" />
-<img height="150" alt="languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=pr1tzy&layout=compact&hide_border=true&hide_title=true&langs_count=8&bg_color=0b0a0f&text_color=8a8597&title_color=4ad9d9" />
-</a>
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/output/github-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/output/github-snake.svg" />
-  <img alt="contribution graph" src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/output/github-snake.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-dark.svg" />
+  <img alt="Language mix across public repositories, source code only, notebooks excluded." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/stack-dark.svg" width="100%" />
 </picture>
 
 ---

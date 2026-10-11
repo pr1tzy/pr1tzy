@@ -1,0 +1,54 @@
+name: refresh panels
+
+# Rebuilds the profile SVGs. The language mix is read live from the GitHub API,
+# so this keeps the stack panel honest as repos change. The header is rebuilt
+# too (it is deterministic - same lap, same output) so a font or layout change
+# only needs a commit to build/, not regenerated assets.
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"      # weekly, Monday
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "build/**"
+      - "vendor/**"
+      - ".github/workflows/refresh.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install --quiet fonttools brotli
+
+      - name: Build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd build
+          python header.py
+          python panels.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain assets build/langs.json)" ]; then
+            git add assets build/langs.json
+            git commit -m "Refresh profile panels"
+            git push
+          else
+            echo "No change."
+          fi
