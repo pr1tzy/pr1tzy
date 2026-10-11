@@ -20,22 +20,33 @@ shipped      ghostline.prithvisingh.fyi
 
 ---
 
+## Selected work
+
+<a href="https://github.com/pr1tzy/ghostline">
 <picture>
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-light.svg" />
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-dark.svg" />
-  <img alt="Selected work: Ghostline, Self-healing LLM QA, ParkiSense, with engineering metrics." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/work-dark.svg" width="100%" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-ghostline-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-ghostline-dark.svg" />
+  <img alt="Ghostline — 60 Hz lap telemetry, ghost comparison, corner-level time loss. 4.7K LOC, 4 test suites, 3 CI workflows, 4 releases. Live." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-ghostline-dark.svg" width="100%" />
 </picture>
+</a>
 
-**[Ghostline](https://github.com/pr1tzy/ghostline)** · [live](https://ghostline.prithvisingh.fyi) — records Assetto Corsa laps at 60 Hz,
-logs the fastest drivers on the server as ghosts, and tells you corner by corner
-where the time went. Python, SQLite, Lua, vanilla JS.
+<a href="https://github.com/pr1tzy/self-healing-llm-qa">
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-self-healing-llm-qa-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-self-healing-llm-qa-dark.svg" />
+  <img alt="Self-healing LLM QA — continuous eval against benchmark and live traffic, auto rollback. DVC, MLflow, Jenkins, 12 pipeline modules." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-self-healing-llm-qa-dark.svg" width="100%" />
+</picture>
+</a>
 
-**[Self-healing LLM QA](https://github.com/pr1tzy/self-healing-llm-qa)** — evaluates every candidate model against a
-benchmark and live traffic, then rolls itself back when a deploy regresses.
-DVC, MLflow, Jenkins, Transformers.
+<a href="https://github.com/pr1tzy/ParkiSense">
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-parkisense-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-parkisense-dark.svg" />
+  <img alt="ParkiSense — keystroke dynamics and drawing tremor, wavelet features. SVM and Random Forest, approx 82% validation." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/card-parkisense-dark.svg" width="100%" />
+</picture>
+</a>
 
-**[ParkiSense](https://github.com/pr1tzy/ParkiSense)** — early Parkinson's screening from keystroke dynamics and
-drawing tremor. Wavelet and time-frequency features into SVM and Random Forest.
+<sub>Ghostline is live at <a href="https://ghostline.prithvisingh.fyi">ghostline.prithvisingh.fyi</a>.</sub>
 
 ---
 

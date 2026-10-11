@@ -29,15 +29,18 @@ SAMPLES = ROOT / "vendor" / "samples"
 FONTS = ROOT / "vendor" / "fonts"
 OUT = ROOT / "assets"
 
-W, H = 1200, 420
+# Sized for GitHub's README column (~880px) so it renders near 1:1.
+# At 1200 it was downscaled to ~73%, which made 10px labels ~7px.
+W, H = 880, 320
+M = 48
 
 DARK = dict(
-    bg="#0b0a0f", fg="#efecf4", mute="#8a8597", dim="#cbc6d6",
+    bg="#0b0a0f", fg="#efecf4", mute="#a9a3b8", dim="#d6d2e0",
     acc="#9d6bff", cyan="#3ef0ff", grid="#efecf4",
     grid_op=".055", rule_op=".14", track_op=".3",
 )
 LIGHT = dict(
-    bg="#f4f2f7", fg="#15131c", mute="#5f5a6b", dim="#45414f",
+    bg="#f4f2f7", fg="#15131c", mute="#4a4556", dim="#2b2733",
     acc="#6f3fd4", cyan="#0d8ea0", grid="#15131c",
     grid_op=".07", rule_op=".18", track_op=".35",
 )
@@ -158,30 +161,30 @@ def build(t: dict) -> str:
     sg = smooth(resample(ghost, "speed", n))
     vmin, vmax = min(min(sy), min(sg)) - 10, max(max(sy), max(sg)) + 10
 
-    tx0, tx1, ty0, ty1 = 64, W - 64, 262, 368
+    tx0, tx1, ty0, ty1 = M, W - M, 210, 274
     p_you = trace_path(sy, tx0, tx1, ty0, ty1, vmin, vmax)
     p_ghost = trace_path(sg, tx0, tx1, ty0, ty1, vmin, vmax)
-    p_track = track_path(you, W - 150, 120, 146)
+    p_track = track_path(you, W - M - 52, 86, 104)
 
     TR = 0.16  # mono tracking
-    eyebrow_a, w_a = mono.text("MUMBAI, IN", 11, 64, 76, TR)
-    eyebrow_b, _ = mono.text("ML INFRASTRUCTURE / BACKEND", 11, 64 + w_a + 26, 76, TR)
-    wordmark, _ = disp.text("PRITHVI SINGH", 94, 60, 176)
+    eyebrow_a, w_a = mono.text("MUMBAI, IN", 12, M, 52, TR)
+    eyebrow_b, _ = mono.text("ML INFRASTRUCTURE / BACKEND", 12, M + w_a + 24, 52, TR)
+    wordmark, _ = disp.text("PRITHVI SINGH", 92, M - 4, 140)
     tagline, _ = mono.text(
         "DISTRIBUTED TRAINING / RETRIEVAL / THE SYSTEMS AROUND THEM",
-        12, 64, 212, TR)
-    cap_l, _ = mono.text("MONZA / LOTUS EXOS 125 S1 / SPEED TRACE, REAL LAP",
-                         11, 64, 398, TR)
+        13, M, 172, TR)
+    cap_l, _ = mono.text("MONZA / LOTUS EXOS 125 S1 / REAL LAP",
+                         12, M, 302, TR)
 
     r_you, r_gh = "1:28.197 YOU", "1:25.750 GHOST"
-    w_gh = mono.width(r_gh, 11, TR)
-    w_sep = mono.width("  /  ", 11, TR)
-    x_gh = W - 64 - w_gh
+    w_gh = mono.width(r_gh, 12, TR)
+    w_sep = mono.width("  /  ", 12, TR)
+    x_gh = W - M - w_gh
     x_sep = x_gh - w_sep
-    x_you = x_sep - mono.width(r_you, 11, TR)
-    cap_you, _ = mono.text(r_you, 11, x_you, 398, TR)
-    cap_sep, _ = mono.text("  /  ", 11, x_sep, 398, TR)
-    cap_gh, _ = mono.text(r_gh, 11, x_gh, 398, TR)
+    x_you = x_sep - mono.width(r_you, 12, TR)
+    cap_you, _ = mono.text(r_you, 12, x_you, 302, TR)
+    cap_sep, _ = mono.text("  /  ", 12, x_sep, 302, TR)
+    cap_gh, _ = mono.text(r_gh, 12, x_gh, 302, TR)
 
     grid = "".join(
         [f'<line x1="{x}" y1="0" x2="{x}" y2="{H}"/>' for x in range(0, W + 1, 60)]
@@ -217,10 +220,10 @@ def build(t: dict) -> str:
 <rect width="{W}" height="{H}" fill="{t['bg']}"/>
 <g class="grid">{grid}</g>
 
-<g class="rise"><g class="acc">{eyebrow_a}</g><g class="mute">{eyebrow_b}</g></g>
+<g class="rise"><g class="acc">{eyebrow_a}</g><g class="dim">{eyebrow_b}</g></g>
 <g class="rise r2 fg">{wordmark}</g>
 <g class="rise r3 dim">{tagline}</g>
-<line class="rule" x1="64" y1="236" x2="{W-64}" y2="236"/>
+<line class="rule" x1="{M}" y1="190" x2="{W-M}" y2="190"/>
 
 <g class="rise r4">
   <path fill="none" stroke="{t['fg']}" stroke-opacity="{t['track_op']}" stroke-width="1.25" d="{p_track}"/>
@@ -241,7 +244,7 @@ def build(t: dict) -> str:
 </circle>
 
 <g class="rise r4">
-  <g class="mute">{cap_l}</g>
+  <g class="dim">{cap_l}</g>
   <g class="acc">{cap_you}</g><g class="mute">{cap_sep}</g><g class="cy">{cap_gh}</g>
 </g>
 </svg>'''
