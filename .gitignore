@@ -1,3 +1,6 @@
 # local render/debug artefacts
 assets/_*
 __pycache__/
+
+# one-time profile admin script; names a private repo, so not published
+apply.sh
