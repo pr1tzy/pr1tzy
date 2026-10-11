@@ -1,0 +1,3 @@
+# local render/debug artefacts
+assets/_*
+__pycache__/

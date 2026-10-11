@@ -1,6 +1,11 @@
-`MUMBAI, IN` · `ML INFRASTRUCTURE / BACKEND`
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/header-light.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/header-dark.svg" />
+  <img alt="Prithvi Singh — ML infrastructure and backend. Speed trace from a real Monza lap, 1:28.197 against a 1:25.750 ghost." src="https://raw.githubusercontent.com/pr1tzy/pr1tzy/main/assets/header-dark.svg" width="100%" />
+</picture>
 
-# Prithvi Singh
+<sub>The trace above is a real lap: Monza, Lotus Exos 125 S1, recorded by
+<a href="https://github.com/pr1tzy/ghostline">Ghostline</a>. Violet is my lap, cyan is the ghost.</sub>
 
 I work on the systems side of machine learning. Distributed training, retrieval,
 and the infrastructure that keeps models serving after the notebook is closed.
