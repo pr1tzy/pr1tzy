@@ -80,4 +80,4 @@ volume alone does not.
 
 ---
 
-Reachable through [LinkedIn](https://linkedin.com/in/prithvi-singh-a796752bb).
+`prithvi30singh@gmail.com` · `+91 9619952004` · [LinkedIn](https://linkedin.com/in/prithvi-singh-a796752bb) · [prithvisingh.fyi](https://prithvisingh.fyi)
