@@ -15,6 +15,7 @@ training     multi-node GPU pretraining of dense embedding models
 retrieval    RAG over Qdrant and Neo4j, masking strategy ablations
 backend      FastAPI, PostgreSQL, Alembic, REST
 infra        AWS (ECS, S3, SQS, Cognito), Terraform, Docker, Slurm
+portfolio    prithvisingh.fyi
 shipped      ghostline.prithvisingh.fyi
 ```
 
