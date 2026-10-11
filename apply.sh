@@ -5,35 +5,63 @@
 # paths, so `gh api /user` becomes `gh api C:/Program Files/Git/user`.
 # MSYS_NO_PATHCONV=1 turns that off, and endpoints are written without a
 # leading slash as a second line of defence.
-#
-# Steps report pass/fail individually instead of aborting the whole run.
 
 export MSYS_NO_PATHCONV=1
 USER=pr1tzy
 fails=0
 
+# Failures print the real error. An earlier version sent stderr to /dev/null,
+# which turned "token is missing a scope" into a silent FAIL.
 step() {
   local label="$1"; shift
-  if "$@" >/dev/null 2>&1; then
+  local out
+  if out=$("$@" 2>&1); then
     printf '  ok    %s\n' "$label"
   else
     printf '  FAIL  %s\n' "$label"
+    printf '        %s\n' "$(echo "$out" | tail -2 | tr '\n' ' ')"
     fails=$((fails + 1))
   fi
 }
 
-echo "1. Profile fields"
-step "bio, name, location, blog" \
-  gh api -X PATCH user \
-    -f name='Prithvi Singh' \
-    -f bio='ML infrastructure and backend. Distributed training, retrieval, and the systems around them.' \
-    -f location='Mumbai, India' \
-    -f blog='https://ghostline.prithvisingh.fyi'
+command -v gh >/dev/null 2>&1 || {
+  echo "gh is not on PATH in this shell. Open a terminal where 'gh --version'"
+  echo "works and run this again."
+  exit 1
+}
+
+echo "0. Preflight"
+if gh auth status 2>&1 | grep -q "'user'"; then
+  printf '  ok    token has the user scope\n'
+  HAVE_USER_SCOPE=1
+else
+  printf '  --    token is missing the "user" scope, so step 1 will be skipped.\n'
+  printf '        Grant it (opens a browser), then re-run this script:\n'
+  printf '          gh auth refresh -h github.com -s user\n'
+  HAVE_USER_SCOPE=0
+fi
 
 echo
-echo "2. Keep the hackathon repo private (no-op if already private)"
-step "final_supervityr2 -> private" \
-  gh repo edit "$USER/final_supervityr2" --visibility private --accept-visibility-change-consequences
+echo "1. Profile fields"
+if [ "$HAVE_USER_SCOPE" = "1" ]; then
+  step "bio, name, location, blog" \
+    gh api -X PATCH user \
+      -f name='Prithvi Singh' \
+      -f bio='ML infrastructure and backend. Distributed training, retrieval, and the systems around them.' \
+      -f location='Mumbai, India' \
+      -f blog='https://ghostline.prithvisingh.fyi'
+else
+  printf '  skip  needs the user scope (see above)\n'
+fi
+
+echo
+echo "2. Keep the hackathon repo private"
+if [ "$(gh repo view "$USER/final_supervityr2" --json isPrivate --jq .isPrivate 2>/dev/null)" = "true" ]; then
+  printf '  ok    already private\n'
+else
+  step "final_supervityr2 -> private" \
+    gh repo edit "$USER/final_supervityr2" --visibility private --accept-visibility-change-consequences
+fi
 
 echo
 echo "3. Descriptions and topics"
@@ -44,10 +72,11 @@ step "ghostline" \
     --add-topic telemetry --add-topic racing --add-topic python \
     --add-topic data-analysis --add-topic assetto-corsa --add-topic time-series
 
-# Rename before editing, so the later steps address the new name.
-if gh repo view "$USER/mlopsproject" >/dev/null 2>&1; then
+if gh repo view "$USER/mlopsproject" --json name >/dev/null 2>&1; then
   step "rename mlopsproject -> self-healing-llm-qa" \
     gh repo rename self-healing-llm-qa --repo "$USER/mlopsproject" --yes
+else
+  printf '  ok    already renamed to self-healing-llm-qa\n'
 fi
 
 step "self-healing-llm-qa" \
@@ -62,7 +91,7 @@ step "ParkiSense" \
     --add-topic machine-learning --add-topic signal-processing --add-topic healthcare
 
 echo
-echo "4. Archive coursework (reversible; keeps your contribution graph intact)"
+echo "4. Archive coursework (reversible)"
 for r in SNLP_Assignments RL_Assignments aoml-assignments \
          Kapde-Ecommerce-Shopping streamlitaai MobileAppDev-BookLibrary; do
   if [ "$(gh repo view "$USER/$r" --json isArchived --jq .isArchived 2>/dev/null)" = "true" ]; then
@@ -77,24 +106,15 @@ done
 #   gh repo delete "$USER/DAT8" --yes
 
 echo
-echo "5. Pin the three that should lead"
-pin_id() {
-  gh api graphql -f query='query($owner:String!,$name:String!){repository(owner:$owner,name:$name){id}}' \
-    -f owner="$USER" -f name="$1" --jq '.data.repository.id' 2>/dev/null
-}
-A=$(pin_id ghostline); B=$(pin_id self-healing-llm-qa); C=$(pin_id ParkiSense)
-if [ -n "$A" ] && [ -n "$B" ] && [ -n "$C" ]; then
-  step "ghostline, self-healing-llm-qa, ParkiSense" \
-    gh api graphql -f query="mutation{replacePinnedItems(input:{pinnedItems:[\"$A\",\"$B\",\"$C\"]}){clientMutationId}}"
-else
-  printf '  FAIL  could not resolve all three repo ids\n'
-  fails=$((fails + 1))
-fi
+echo "5. Pins"
+echo "  --    GitHub has no public API for pinning. Do this once by hand:"
+echo "        https://github.com/$USER  ->  Customize your pins"
+echo "        Tick: ghostline, self-healing-llm-qa, ParkiSense"
 
 echo
 if [ "$fails" -eq 0 ]; then
-  echo "All steps succeeded. https://github.com/$USER"
+  echo "No failures. https://github.com/$USER"
 else
-  echo "$fails step(s) failed. Re-run is safe; see messages above."
+  echo "$fails step(s) failed - see the messages above. Re-running is safe."
   exit 1
 fi
